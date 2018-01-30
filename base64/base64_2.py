@@ -10,56 +10,56 @@ class Base64:
     CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
 
     @classmethod
-    def encode(cls, input):
+    def encode(cls, input_data):
         """
         バイナリデータをBase64でエンコードされた1行のASCII文字列に変換する
         """
         i = 0
-        output = ''
-        while i < len(input):
-            input_buf = [0, 0, 0]
-            output_buf = [0, 0, 0, 0]
+        output_data = ''
+        while i < len(input_data):
+            input_data_buf = [0, 0, 0]
+            output_data_buf = [0, 0, 0, 0]
             j = 0
-            while j < 3 and i+j < len(input):
-                input_buf[j] = ord(input[i+j])
+            while j < 3 and i+j < len(input_data):
+                input_data_buf[j] = ord(input_data[i+j])
                 j += 1
 
-            output_buf[0] = (input_buf[0] & 0xfc) >> 2
-            output_buf[1] = ((input_buf[0] & 0x03) << 4) | ((input_buf[1]) >> 4)
-            output_buf[2] = ((input_buf[1] & 0x0f) << 2) | ((input_buf[2]) >> 6)
-            output_buf[3] = input_buf[2] & 0x3f
+            output_data_buf[0] = (input_data_buf[0] & 0xfc) >> 2
+            output_data_buf[1] = ((input_data_buf[0] & 0x03) << 4) | ((input_data_buf[1]) >> 4)
+            output_data_buf[2] = ((input_data_buf[1] & 0x0f) << 2) | ((input_data_buf[2]) >> 6)
+            output_data_buf[3] = input_data_buf[2] & 0x3f
             for k in range(j, 3):
-                output_buf[k+1] = 64
-            for l in output_buf:
-                output += cls.CHARS[l]
+                output_data_buf[k+1] = 64
+            for l in output_data_buf:
+                output_data += cls.CHARS[l]
             i += 3
-        return output
+        return output_data
 
     @classmethod
-    def decode(cls, input):
+    def decode(cls, input_data):
         """
         1行のASCII文字列をバイナリデータに変換する
         """
         i = 0
-        output = ""
-        while i < len(input):
-            input_buf = [0, 0, 0, 0]
-            output_buf = [0, 0, 0]
+        output_data = ""
+        while i < len(input_data):
+            input_data_buf = [0, 0, 0, 0]
+            output_data_buf = [0, 0, 0]
             j = 0
-            while j < 4 and i+j < len(input):
-                input_buf[j] = cls.CHARS.index(input[i+j])
+            while j < 4 and i+j < len(input_data):
+                input_data_buf[j] = cls.CHARS.index(input_data[i+j])
                 j += 1
 
-            output_buf[0] = (input_buf[0] << 2) | ((input_buf[1] & 0x30) >> 4)
-            output_buf[1] = ((input_buf[1] & 0x0f) << 4) | ((input_buf[2] & 0x3c) >> 2)
-            output_buf[2] = ((input_buf[2] & 0x03) << 6) | input_buf[3]
+            output_data_buf[0] = (input_data_buf[0] << 2) | ((input_data_buf[1] & 0x30) >> 4)
+            output_data_buf[1] = ((input_data_buf[1] & 0x0f) << 4) | ((input_data_buf[2] & 0x3c) >> 2)
+            output_data_buf[2] = ((input_data_buf[2] & 0x03) << 6) | input_data_buf[3]
 
-            for k in output_buf:
+            for k in output_data_buf:
                 if k == 64:
                     break
-                output += chr(k)
+                output_data += chr(k)
             i += 4
-        return output
+        return output_data
 
 def write_binary(binary, filename):
     """
@@ -77,6 +77,6 @@ if __name__ == "__main__":
 
     write_binary(img_binary, "decoded.png")
 
-    # print("input: {}".format(img_binary))
+    # print("input_data: {}".format(img_binary))
     print("encode: {}".format(enc))
     print("decode: {}".format(dec))
